@@ -1,0 +1,52 @@
+#################################################################
+# Dockerfile
+#
+# Version:          14
+# Software:         Fastx_toolkit
+# Software Version: 0.0.14
+# Description:      The FASTX-Toolkit is a collection of command line tools for Short-Reads FASTA/FASTQ files preprocessing
+# Website:          http://hannonlab.cshl.edu/fastx_toolkit/download.html
+# Tags:             Genomics
+# Provides:         Fastx_toolkit 0.0.14
+# Base Image:       biodckr/biodocker
+# Build Cmd:        docker build -t biodckrdev/fastx_toolkit .
+# Pull Cmd:         docker pull biodckrdev/fastx_toolkit
+# Run Cmd:          docker run -it biodckrdev/fastx_toolkit
+#################################################################
+
+# La imagen de Ubuntu se utilizará desde biodocker
+FROM biodckr/biodocker
+
+######################### INSTALACIÓN ###########################
+
+# Cambiar el usuario al root
+USER root
+
+RUN wget https://github.com/agordon/libgtextutils/releases/download/0.7/libgtextutils-0.7.tar.gz && \
+    tar xvf libgtextutils-0.7.tar.gz && \
+    cd libgtextutils-0.7 && \ 
+    ./configure && \
+    make && \
+    sudo make install && \
+    cd .. && \
+    rm -rf lib*
+
+RUN wget https://github.com/agordon/fastx_toolkit/releases/download/0.0.14/fastx_toolkit-0.0.14.tar.bz2 && \
+    tar xvf fastx_toolkit-0.0.14.tar.bz2 && \ 
+    cd fastx_toolkit-0.0.14 && \
+    ./configure && \
+    make && \
+    sudo make install && \
+    cd .. && \
+    rm -rf fas*
+
+# Retornando al usuario biodocker
+USER biodocker
+
+# Cambiando el working directory a /DATA
+WORKDIR /data/
+
+################### FIN DE LA INSTALACIÓN ###################
+
+# Autor del dockerfile
+Creado por Ricardo Medina <ramedinar@icloud.com>
